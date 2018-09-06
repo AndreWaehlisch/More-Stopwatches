@@ -1,0 +1,46 @@
+Version 1.10
+		* TOC update for 8.0
+		* right clicking a timer fixes it in place: dragging and the close button are disabled.
+
+Version 1.9
+		* TOC update for 7.3
+		* fixed PlaySound lua error
+
+Version 1.8
+		* TOC update for 7.2
+		* added shift-click to timers: this pastes the timestamp of the timer (hh:mm:ss) to the currently active chat box
+
+Version 1.7
+		* TOC update for 7.0.3
+
+Version 1.6
+		* saved timers will remember their position now
+		* creating a new timer will position it under the last created timer OR under the last moved timer
+		* creating a new timer without providing a timerName will reuse old (hidden/closed) timers which where created before. this did only work for timers with non-default names before
+		* standard Blizzard timer is not hidden when it was shown from minimap button (this happened when a new /timer was requested)
+		* only for advanced users: you can use "position:x,y" to force the timer's position (see the addon description on curse for more details)
+
+Version 1.5
+		* fixed default behaviour of session saving, would only default to true if a TimerName was provided
+		* fixed saving of negative tickers
+		* fixed handling of saved timers with default name
+
+Version 1.4
+		* TOC update for 6.1
+
+Version 1.3
+		* ALL SAVED TIMERS RESET
+		* timers are now saved between sessions by default - a star * indicates that it is NOT saved now (was the other way around). to disable saving between sessions you can still call with "/timer false TimerName" or just close the timer
+		* timers paused state is saved between sessions as well now (a timer with 3min which was paused in the previous session will be restored paused at 3min in the new session)
+		* timers saved with 0h0min0s are actually saved as that
+		* support for negative tickers
+
+Version 1.2
+		* updated TOC to 6.0
+		* added option to disable the save-between-sessions feature with '/timer false Name' (just closing it still works)
+
+Version 1.1
+		* fixed input detection
+
+Version 1.0
+		* initial release
