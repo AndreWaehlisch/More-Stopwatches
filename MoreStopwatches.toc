@@ -2,7 +2,7 @@
 
 ## Title: More Stopwatches
 
-## Version: 1.10
+## Version: @project-version@
 
 ## Notes: Provides as many stopwatches as you like.
 
