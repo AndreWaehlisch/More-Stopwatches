@@ -98,10 +98,10 @@ function MoreStopwatches.Init()
 		self:RegisterEvent("PLAYER_LOGOUT");
 
 		-- user may have disabled dragging (with a right-click), only enable it if not. also disable the close button if dragging disabled.
-		if ( MoreStopwatchesSave.savedTimers[self:GetName()].isEnabled ) then
-			self:RegisterForDrag("LeftButton");
-		else
+		if ( MoreStopwatchesSave.savedTimers[self:GetName()].isDisabled ) then
 			_G[self:GetName().."StopwatchTabFrameStopwatchCloseButton"]:Disable();
+		else
+			self:RegisterForDrag("LeftButton");
 		end;
 
 		local StopwatchTabFrame = _G[self:GetName().."StopwatchTabFrame"];
@@ -156,7 +156,7 @@ function MoreStopwatches.Init()
 			if ( closeButton:IsEnabled() ) then
 				closeButton:Disable();
 				self:RegisterForDrag(); -- disable drag
-				MoreStopwatchesSave.savedTimers[self:GetName()].isEnabled = false;
+				MoreStopwatchesSave.savedTimers[self:GetName()].isDisabled = true;
 
 				-- warn the user (once per session) that they disabled a timer
 				if ( disabledWarning ) then
@@ -166,7 +166,7 @@ function MoreStopwatches.Init()
 			else
 				closeButton:Enable();
 				self:RegisterForDrag("LeftButton"); -- enable drag
-				MoreStopwatchesSave.savedTimers[self:GetName()].isEnabled = true;
+				MoreStopwatchesSave.savedTimers[self:GetName()].isDisabled = false;
 			end;
 		-- paste current time to active edit box when timer is shift-clicked
 		elseif ( IsShiftKeyDown() ) then

@@ -1,4 +1,4 @@
-## Interface: 80000
+## Interface: 80100
 
 ## Title: More Stopwatches
 
@@ -6,7 +6,7 @@
 
 ## Notes: Provides as many stopwatches as you like.
 
-## Notes-deDE: Stellt beliebig viele Stoppuhren zur Verfügung.
+## Notes-deDE: Stellt beliebig viele Stoppuhren zur VerfÃ¼gung.
 
 ## Author: |cffFF7D0AHoochie|r @EU-Dethecus
 
