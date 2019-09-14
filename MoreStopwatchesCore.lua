@@ -272,8 +272,11 @@ startup:SetScript("OnEvent",function(self, event, addonName)
 			end;
 		end;
 
-		--hook the blizzard /timer (also /sw and /stopwatch) slash command, this is where we do our magic
-		hooksecurefunc(SlashCmdList, "STOPWATCH", MoreStopwatches.Slash);
+		-- classic WoW (version 11302) seems to not have SlashCmdList["STOPWATCH"], so create our own slash commands
+		SLASH_MORESTOPWATCHES1 = "/sw";
+		SLASH_MORESTOPWATCHES2 = "/stopwatch";
+		SLASH_MORESTOPWATCHES2 = "/timer";
+		SlashCmdList["MORESTOPWATCHES"] = MoreStopwatches.Slash
 
 		if not (MoreStopwatchesSave.savedTimers and MoreStopwatchesSave.time) then
 			MoreStopwatchesSave.savedTimers = {};

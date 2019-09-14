@@ -1,4 +1,4 @@
-## Interface: 80100
+## Interface: 11302
 
 ## Title: More Stopwatches
 
@@ -8,7 +8,7 @@
 
 ## Notes-deDE: Stellt beliebig viele Stoppuhren zur Verfügung.
 
-## Author: |cffFF7D0AHoochie|r @EU-Dethecus
+## Author: |cffFF7D0AHoochie|r @EU-Lucifron
 
 ## SavedVariablesPerCharacter: MoreStopwatchesSave
 
