@@ -126,14 +126,16 @@ function MoreStopwatches.Init()
 
 		local StopwatchTabFrame = _G[name .. "StopwatchTabFrame"];
 
-		if ( self.prevMouseIsOver ) then
-			if ( not self:IsMouseOver() ) then
-				UIFrameFadeOut(StopwatchTabFrame, CHAT_FRAME_FADE_TIME);
-				self.prevMouseIsOver = false;
+		if ( not MoreStopwatchesSave.PermanentHeaders ) then
+			if ( self.prevMouseIsOver ) then
+				if ( not self:IsMouseOver() ) then
+					UIFrameFadeOut(StopwatchTabFrame, CHAT_FRAME_FADE_TIME);
+					self.prevMouseIsOver = false;
+				end;
+			elseif ( self:IsMouseOver() ) then
+				UIFrameFadeIn(StopwatchTabFrame, CHAT_FRAME_FADE_TIME);
+				self.prevMouseIsOver = true;
 			end;
-		elseif ( self:IsMouseOver() ) then
-			UIFrameFadeIn(StopwatchTabFrame, CHAT_FRAME_FADE_TIME);
-			self.prevMouseIsOver = true;
 		end;
 	end;
 
