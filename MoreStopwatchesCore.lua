@@ -17,7 +17,7 @@ startup:SetScript("OnEvent",function(self, event, addonName)
 		--debug stuff
 		local function debug(...)
 			if MoreStopwatches.debugEnabled then
-				print("MoreStopwachtes Debug:", ...);
+				print("MoreStopwatches Debug:", ...);
 			end;
 		end;
 
@@ -168,7 +168,7 @@ startup:SetScript("OnEvent",function(self, event, addonName)
 
 		--slash command function
 		function MoreStopwatches.Slash(msg, status, savedPosition)
-			debug("Slash msg:", msg, "status:", status, "savedPosition:", savedPosition)
+			debug("Slash msg:", msg, "status:", status, "savedPosition:", savedPosition);
 
 			--hide blizzard stopwatch. because we hijack blizzards /timer slash command, we have to hide the default stopwatch after being called (except when user uses the minimap-menu to explicitly use the default stopwatch)
 			if StopwatchFrame then
@@ -270,13 +270,63 @@ startup:SetScript("OnEvent",function(self, event, addonName)
 				MoreStopwatches_StopwatchTemplate_Play(_G[timer:GetName() .. "StopwatchPlayPauseButton"]);
 				debug("Timer started on create:",timerName);
 			end;
+
+			-- show header if requested by user
+			local StopwatchTabFrame = _G[timer:GetName() .. "StopwatchTabFrame"];
+			if ( MoreStopwatchesSave.PermanentHeaders ) then
+				UIFrameFadeIn(StopwatchTabFrame, CHAT_FRAME_FADE_TIME);
+			end;
 		end;
 
 		-- classic WoW (version 11302) seems to not have SlashCmdList["STOPWATCH"], so create our own slash commands
 		SLASH_MORESTOPWATCHES1 = "/sw";
 		SLASH_MORESTOPWATCHES2 = "/stopwatch";
 		SLASH_MORESTOPWATCHES2 = "/timer";
-		SlashCmdList["MORESTOPWATCHES"] = MoreStopwatches.Slash
+		SlashCmdList["MORESTOPWATCHES"] = MoreStopwatches.Slash;
+		local MoreStopwatchesString = "MoreStopwatches: ";
+
+		function MoreStopwatches.ConfigSlash(msg)
+			debug("ConfigSlash msg:", msg);
+
+			local lowmsg = strlower(msg);
+			local command, commandrest = lowmsg:match("^(%S*)%s*(.-)$");
+
+			if ( command == "header" ) then
+				if ( MoreStopwatchesSave.PermanentHeaders ) then
+					MoreStopwatchesSave.PermanentHeaders = false;
+					print(MoreStopwatchesString .. "Permanent headers disabled.");
+				else
+					MoreStopwatchesSave.PermanentHeaders = true;
+					print(MoreStopwatchesString .. "Permanent headers enabled.");
+				end;
+
+				for i = #MoreStopwatches.timerList_sorted, 1, -1 do
+					local timer = MoreStopwatches.timerList_sorted[i];
+					local StopwatchTabFrame = _G[timer:GetName() .. "StopwatchTabFrame"];
+					if timer:IsVisible() then
+						if ( MoreStopwatchesSave.PermanentHeaders ) then
+							UIFrameFadeIn(StopwatchTabFrame, CHAT_FRAME_FADE_TIME);
+						else
+							UIFrameFadeOut(StopwatchTabFrame, CHAT_FRAME_FADE_TIME);
+						end;
+					end;
+				end;
+			elseif ( command == "help" ) then
+				if ( commandrest == "header" ) then
+					print(MoreStopwatchesString .. "Toggles the permanent visibility of the timer headers (where the timer name is displayed).");
+				else
+					print(MoreStopwatchesString .. "Available commands are: header");
+				end
+			else
+				print(MoreStopwatchesString .. "To create a new timer use '/sw MyNewTimer'. To show help use '/msw help'");
+			end;
+
+		end;
+
+		-- while the above slash command creates a new timer/stopwatch, we shall add a "config" slash command here
+		SLASH_MORESTOPWATCHESCONFIG1 = "/morestopwatches";
+		SLASH_MORESTOPWATCHESCONFIG2 = "/msw";
+		SlashCmdList["MORESTOPWATCHESCONFIG"] = MoreStopwatches.ConfigSlash
 
 		if not (MoreStopwatchesSave.savedTimers and MoreStopwatchesSave.time) then
 			MoreStopwatchesSave.savedTimers = {};
