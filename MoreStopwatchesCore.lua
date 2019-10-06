@@ -289,7 +289,7 @@ startup:SetScript("OnEvent",function(self, event, addonName)
 			local lowmsg = strlower(msg);
 			local command, commandrest = lowmsg:match("^(%S*)%s*(.-)$");
 
-			if ( command == "header" ) then
+			if ( (command == "header") or (command == "headers") ) then
 				if ( MoreStopwatchesSave.PermanentHeaders ) then
 					MoreStopwatchesSave.PermanentHeaders = false;
 					print(MoreStopwatchesString .. "Permanent headers disabled.");
