@@ -268,20 +268,21 @@ startup:SetScript("OnEvent",function(self, event, addonName)
 			--only start the timer if it was not paused on save, or if we are called by user (then status is a table)
 			if ( type(status) == "table" ) or ( status == "PLAYING" ) then
 				MoreStopwatches_StopwatchTemplate_Play(_G[timer:GetName() .. "StopwatchPlayPauseButton"]);
-				debug("Timer started on create:",timerName);
+				debug("Timer started on create:", timerName);
 			end;
 
 			-- show header if requested by user
-			local StopwatchTabFrame = _G[timer:GetName() .. "StopwatchTabFrame"];
 			if ( MoreStopwatchesSave.PermanentHeaders ) then
+				local StopwatchTabFrame = _G[timer:GetName() .. "StopwatchTabFrame"];
 				UIFrameFadeIn(StopwatchTabFrame, CHAT_FRAME_FADE_TIME);
+				debug("Header is permanently shown.");
 			end;
 		end;
 
 		-- classic WoW (version 11302) seems to not have SlashCmdList["STOPWATCH"], so create our own slash commands
 		SLASH_MORESTOPWATCHES1 = "/sw";
 		SLASH_MORESTOPWATCHES2 = "/stopwatch";
-		SLASH_MORESTOPWATCHES2 = "/timer";
+		SLASH_MORESTOPWATCHES3 = "/timer";
 		SlashCmdList["MORESTOPWATCHES"] = MoreStopwatches.Slash;
 		local MoreStopwatchesString = "MoreStopwatches: ";
 
@@ -310,6 +311,12 @@ startup:SetScript("OnEvent",function(self, event, addonName)
 							UIFrameFadeOut(StopwatchTabFrame, CHAT_FRAME_FADE_TIME);
 						end;
 					end;
+				end;
+			elseif ( (command == "closeall") or (command == "close") or (command == "hide") ) then
+				for i, k in pairs(MoreStopwatches.timerList) do
+					k:Hide();
+					--remove savedTimer if user closes stopwatch
+					MoreStopwatchesSave.savedTimers[k:GetName()] = nil;
 				end;
 			elseif ( command == "help" ) then
 				if ( commandrest == "header" ) then
