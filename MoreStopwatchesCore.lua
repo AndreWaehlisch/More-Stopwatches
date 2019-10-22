@@ -319,8 +319,10 @@ startup:SetScript("OnEvent",function(self, event, addonName)
 			elseif ( command == "help" ) then
 				if ( commandrest == "header" ) then
 					print(MoreStopwatchesString .. "Toggles the permanent visibility of the timer headers (where the timer name is displayed).");
+				elseif ( commandrest == "close" ) then
+					print(MoreStopwatchesString .. "Close all stopwatches.");
 				else
-					print(MoreStopwatchesString .. "Available commands are: header");
+					print(MoreStopwatchesString .. "Available commands are: header, close");
 				end
 			else
 				print(MoreStopwatchesString .. "To create a new timer use '/sw MyNewTimer'. To show help use '/msw help'");
