@@ -16,13 +16,13 @@ startup:SetScript("OnEvent",function(self, event, addonName)
 
 		--debug stuff
 		local function debug(...)
-			if MoreStopwatches.debugEnabled then
+			if ( MoreStopwatches.debugEnabled ) then
 				print("MoreStopwatches Debug:", ...);
 			end;
 		end;
 
 		--init saved vars on first login
-		if not MoreStopwatchesSave then
+		if ( not MoreStopwatchesSave ) then
 			MoreStopwatchesSave = {};
 		end;
 
@@ -74,7 +74,7 @@ startup:SetScript("OnEvent",function(self, event, addonName)
 		local function GetLastTimerPosition()
 			for i = #MoreStopwatches.timerList_sorted, 1, -1 do
 				local timer = MoreStopwatches.timerList_sorted[i];
-				if timer:IsVisible() then
+				if ( timer:IsVisible() ) then
 					return { timer:GetPoint(0) };
 				end;
 			end;
@@ -86,7 +86,7 @@ startup:SetScript("OnEvent",function(self, event, addonName)
 		local function GetNextTimerPosition(default)
 			local lastTimerPos = GetLastTimerPosition();
 			debug("GetNextTimerPosition:", default, unpack(lastTimerPos));
-			if lastTimerPos[5] and ( not default ) then
+			if ( lastTimerPos[5] and ( not default ) ) then
 				lastTimerPos[5] = lastTimerPos[5] - 42;
 				return unpack(lastTimerPos);
 			else
@@ -140,7 +140,7 @@ startup:SetScript("OnEvent",function(self, event, addonName)
 			-- extract timer position from command. must be in the form of "position:x,y" (or a dot instead of the comma). it can be anywhere inside the slash command.
 			local positionPattern = "position:(%d+)[%,%.](%d+)";
 			local _, _, x, y = strfind(msg, positionPattern);
-			if x and y then
+			if ( x and y ) then
 				msg = gsub(msg, positionPattern, "");
 				rawset(params, "savedPosition", { "BOTTOMLEFT", UIParent, "BOTTOMLEFT", x, y });
 				debug("Position requested:", x, y);
@@ -158,7 +158,7 @@ startup:SetScript("OnEvent",function(self, event, addonName)
 					debug("Paramter String", i, command, "---", commandRest);
 				end;
 
-				if command then
+				if ( command ) then
 					params[i] = command;
 				end;
 			end;
@@ -171,8 +171,8 @@ startup:SetScript("OnEvent",function(self, event, addonName)
 			debug("Slash msg:", msg, "status:", status, "savedPosition:", savedPosition);
 
 			--hide blizzard stopwatch. because we hijack blizzards /timer slash command, we have to hide the default stopwatch after being called (except when user uses the minimap-menu to explicitly use the default stopwatch)
-			if StopwatchFrame then
-				if MoreStopwatches.BlizzTimerShownFromMinimap then
+			if ( StopwatchFrame ) then
+				if ( MoreStopwatches.BlizzTimerShownFromMinimap ) then
 					StopwatchFrame:Show();
 				else
 					StopwatchFrame:Hide();
@@ -205,7 +205,7 @@ startup:SetScript("OnEvent",function(self, event, addonName)
 				timer = MoreStopwatches.timerList[timerName];
 			end;
 
-			if timer then
+			if ( timer ) then
 				--show the timer if the timerName already exists
 				timer:Show();
 				debug("Timer already exists. Reusing.");
@@ -215,14 +215,19 @@ startup:SetScript("OnEvent",function(self, event, addonName)
 				debug("New timer created.");
 			end;
 
+			local StopwatchTicker = _G[timer:GetName().."StopwatchTicker"];
+			StopwatchTicker.startTime = GetServerTime();
+			debug("Start time:", StopwatchTicker.startTime);
+
 			--set a specific time (if user requested that) [in minutes]
-			if params.setTimer then
+			if ( params.setTimer ) then
 				_G[timer:GetName() .. "StopwatchTicker"].timer = ( params.setTimer * 60 );
+				StopwatchTicker.startTime = StopwatchTicker.startTime - ( params.setTimer * 60 );
 				MoreStopwatches_StopwatchTemplateTicker_Update(timer);
 				debug("Timer set to requested time:", params.setTimer*60);
 			end;
 
-			if params.saveBetweenSessions then
+			if ( params.saveBetweenSessions ) then
 				--register this stopwatch to be saved between sessions
 				timer.saveBetweenSessions = true;
 				_G[timer:GetName() .. "StopwatchTabFrameStopwatchTitle"]:SetText(timerName);
@@ -236,10 +241,10 @@ startup:SetScript("OnEvent",function(self, event, addonName)
 
 			--restore saved position of timer
 			timer:ClearAllPoints();
-			if params.savedPosition then
+			if ( params.savedPosition ) then
 				timer:SetPoint( unpack(params.savedPosition) );
 				debug("Used requested timer position:", unpack(params.savedPosition));
-			elseif savedPosition then
+			elseif ( savedPosition ) then
 				savedPosition[2] = UIParent; -- the old saved UIParent is not valid anymore
 				timer:SetPoint( unpack(savedPosition) );
 				debug("Used saved timer position:", unpack(savedPosition));
@@ -261,7 +266,7 @@ startup:SetScript("OnEvent",function(self, event, addonName)
 			--store last position: we will place the next timer below the last one
 			MoreStopwatchesSave.savedTimers[timer:GetName()].savedPosition = { timer:GetPoint(0) };
 
-			if MoreStopwatchesSave.savedTimers[timer:GetName()].isDisabled then
+			if ( MoreStopwatchesSave.savedTimers[timer:GetName()].isDisabled ) then
 				debug("Timer was disabled in last sesssion.");
 			end;
 
@@ -302,7 +307,7 @@ startup:SetScript("OnEvent",function(self, event, addonName)
 				for i = #MoreStopwatches.timerList_sorted, 1, -1 do
 					local timer = MoreStopwatches.timerList_sorted[i];
 					local StopwatchTabFrame = _G[timer:GetName() .. "StopwatchTabFrame"];
-					if timer:IsVisible() then
+					if ( timer:IsVisible() ) then
 						if ( MoreStopwatchesSave.PermanentHeaders ) then
 							UIFrameFadeIn(StopwatchTabFrame, CHAT_FRAME_FADE_TIME);
 						else
@@ -335,9 +340,9 @@ startup:SetScript("OnEvent",function(self, event, addonName)
 		SLASH_MORESTOPWATCHESCONFIG2 = "/msw";
 		SlashCmdList["MORESTOPWATCHESCONFIG"] = MoreStopwatches.ConfigSlash
 
-		if not (MoreStopwatchesSave.savedTimers and MoreStopwatchesSave.time) then
+		if ( not (MoreStopwatchesSave.savedTimers and MoreStopwatchesSave.time) ) then
 			MoreStopwatchesSave.savedTimers = {};
-			MoreStopwatchesSave.time = time();
+			MoreStopwatchesSave.time = GetServerTime();
 		end;
 
 		setmetatable(MoreStopwatchesSave.savedTimers, {
@@ -348,13 +353,13 @@ startup:SetScript("OnEvent",function(self, event, addonName)
 		});
 
 		--restore saved stopwatches
-		if MoreStopwatchesSave.savedTimers and MoreStopwatchesSave.time then
+		if ( MoreStopwatchesSave.savedTimers and MoreStopwatchesSave.time ) then
 			for frameName, tab in pairs(MoreStopwatchesSave.savedTimers) do
 				if ( type(tab.savedTime) == "number" ) and ( type(tab.savedPosition) == "table" ) then
 					local restoreTime;
 
 					if ( tab.playing ) then
-						restoreTime= (time() - MoreStopwatchesSave.time) + tab.savedTime;
+						restoreTime= (GetServerTime() - MoreStopwatchesSave.time) + tab.savedTime;
 					else
 						restoreTime = tab.savedTime;
 					end;
@@ -386,7 +391,7 @@ startup:SetScript("OnEvent",function(self, event, addonName)
 			end;
 		end;
 
-		if not IsAddOnLoaded("Blizzard_TimeManager") then
+		if ( not IsAddOnLoaded("Blizzard_TimeManager") ) then
 			LoadAddOn("Blizzard_TimeManager");
 		end;
 
