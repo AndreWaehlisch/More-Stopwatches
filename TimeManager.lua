@@ -4,7 +4,7 @@ local disabledWarning = true;
 
 --init all stopwatch functions: adapted from \Interface\AddOns\Blizzard_TimeManager\Blizzard_TimeManager.lua
 function MoreStopwatches.Init()
-	if inited then
+	if ( inited ) then
 		return;
 	else
 		inited = true;
@@ -12,19 +12,20 @@ function MoreStopwatches.Init()
 
 	-- speed optimizations (mostly so update functions are faster)
 	local _G = getfenv(0);
-	local date = _G.date;
 	local abs = _G.abs;
 	local min = _G.min;
 	local floor = _G.floor;
 	local mod = _G.mod;
+	local GetServerTime = _G.GetServerTime;
 
 	-- private data
 	local SEC_TO_MINUTE_FACTOR = 1/60;
 	local SEC_TO_HOUR_FACTOR = SEC_TO_MINUTE_FACTOR*SEC_TO_MINUTE_FACTOR;
 
 	function MoreStopwatches_StopwatchTemplate_Play(self)
+		local timer = self:GetParent();
 		local StopwatchPlayPauseButton = self;
-		local StopwatchTicker = _G[self:GetParent():GetName().."StopwatchTicker"];
+		local StopwatchTicker = _G[timer:GetName().."StopwatchTicker"];
 
 		if ( StopwatchPlayPauseButton.playing ) then
 			return;
@@ -32,10 +33,11 @@ function MoreStopwatches.Init()
 
 		StopwatchPlayPauseButton.playing = true;
 
-		if self:GetParent().saveBetweenSessions then
-			MoreStopwatchesSave.savedTimers[self:GetParent():GetName()].playing = true;
+		if ( self:GetParent().saveBetweenSessions ) then
+			MoreStopwatchesSave.savedTimers[timer:GetName()].playing = true;
 		end;
 
+		StopwatchTicker.startTime = GetServerTime() - StopwatchTicker.timer;
 		StopwatchTicker:SetScript("OnUpdate", MoreStopwatches_StopwatchTemplateTicker_OnUpdate);
 		StopwatchPlayPauseButton:SetNormalTexture("Interface\\TimeManager\\PauseButton");
 	end;
@@ -50,7 +52,7 @@ function MoreStopwatches.Init()
 
 		StopwatchPlayPauseButton.playing = false;
 
-		if self:GetParent().saveBetweenSessions then
+		if ( self:GetParent().saveBetweenSessions ) then
 			MoreStopwatchesSave.savedTimers[self:GetParent():GetName()].playing = false;
 		end;
 
@@ -61,9 +63,9 @@ function MoreStopwatches.Init()
 	function MoreStopwatches_StopwatchTemplate_Clear(stopwatchSelf, resetbuttonSelf)
 		local self;
 
-		if stopwatchSelf then
+		if ( stopwatchSelf ) then
 			self = stopwatchSelf;
-		elseif resetbuttonSelf then
+		elseif ( resetbuttonSelf ) then
 			self = resetbuttonSelf:GetParent();
 		end;
 
@@ -77,7 +79,7 @@ function MoreStopwatches.Init()
 
 		StopwatchPlayPauseButton.playing = false;
 
-		if self.saveBetweenSessions then
+		if ( self.saveBetweenSessions ) then
 			MoreStopwatchesSave.savedTimers[self:GetName()].playing = false;
 		end;
 
@@ -114,11 +116,11 @@ function MoreStopwatches.Init()
 		local name = self:GetName();
 
 		--save time of stopwatches every 1 second and store it in a savedVar
-		if self.saveBetweenSessions then
+		if ( self.saveBetweenSessions ) then
 			self.elapsed = (self.elapsed or 0) + elapsed;
 
 			if ( self.elapsed > 1 ) then
-				MoreStopwatchesSave.time = time();
+				MoreStopwatchesSave.time = GetServerTime();
 				MoreStopwatchesSave.savedTimers[name].savedTime = _G[name .. "StopwatchTicker"].timer;
 				self.elapsed = 0;
 			end;
@@ -143,7 +145,6 @@ function MoreStopwatches.Init()
 		local StopwatchTabFrame = _G[self:GetName() .. "StopwatchTabFrame"];
 
 		UIFrameFadeRemoveFrame(StopwatchTabFrame);
-		StopwatchTabFrame:SetAlpha(0);
 		self.prevMouseIsOver = false;
 	end;
 
@@ -196,22 +197,22 @@ function MoreStopwatches.Init()
 		self:StopMovingOrSizing();
 
 		--save position after dragging
-		if self.saveBetweenSessions then
+		if ( self.saveBetweenSessions ) then
 			MoreStopwatchesSave.savedTimers[self:GetName()].savedPosition = { self:GetPoint(0) };
 		end;
 	end;
 
 	function MoreStopwatches_StopwatchTemplateTicker_OnUpdate(self, elapsed)
-		self.timer = self.timer + elapsed;
-		MoreStopwatches_StopwatchTemplateTicker_Update(nil,self);
+		self.timer = GetServerTime() - self.startTime;
+		MoreStopwatches_StopwatchTemplateTicker_Update(nil, self);
 	end;
 
 	function MoreStopwatches_StopwatchTemplateTicker_Update(stopwatchSelf, tickerSelf)
 		local self;
 
-		if stopwatchSelf then
+		if ( stopwatchSelf ) then
 			self = stopwatchSelf;
-		elseif tickerSelf then
+		elseif ( tickerSelf ) then
 			self = tickerSelf:GetParent();
 		end;
 
@@ -225,7 +226,7 @@ function MoreStopwatches.Init()
 
 		local sign = { h="", m="", s="", };
 
-		if StopwatchTicker.timer < 0 then
+		if ( StopwatchTicker.timer < 0 ) then
 			sign.h = (hour > 0 and "-") or "";
 			sign.m = (minute > 0 and "-") or "";
 			sign.s = (second > 0 and "-") or "";
