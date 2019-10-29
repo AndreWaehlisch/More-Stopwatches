@@ -396,11 +396,11 @@ startup:SetScript("OnEvent",function(self, event, addonName)
 		end;
 
 		--check if Blizzards standard stopwatch was shown with the minimap-menu
-		TimeManagerStopwatchCheck:HookScript("OnClick",function()
+		TimeManagerStopwatchCheck:HookScript("OnClick", function()
 			MoreStopwatches.BlizzTimerShownFromMinimap = StopwatchFrame:IsVisible();
 		end);
 
-		StopwatchCloseButton:HookScript("OnClick",function()
+		StopwatchCloseButton:HookScript("OnClick", function()
 			MoreStopwatches.BlizzTimerShownFromMinimap = false;
 		end);
 
