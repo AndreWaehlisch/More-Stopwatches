@@ -6,6 +6,18 @@ MoreStopwatches.Addon_Initialized = false; -- ADDON_LOADED fired for our addon
 MoreStopwatches.BTM_Initialized = false; -- blizzard time manager
 MoreStopwatches.debugEnabled = false; -- debug output toggle
 
+--hooks Blizzards TimeManager, only call this if Blizzards addon is loaded
+local function blizzardTimeManagerHooks()
+	--check if Blizzards standard stopwatch was shown with the minimap-menu
+	TimeManagerStopwatchCheck:HookScript("OnClick", function()
+		MoreStopwatches.BlizzTimerShownFromMinimap = StopwatchFrame:IsVisible();
+	end);
+
+	StopwatchCloseButton:HookScript("OnClick", function()
+		MoreStopwatches.BlizzTimerShownFromMinimap = false;
+	end);
+end;
+
 --do our stuff once saved vars are loaded
 local startup = CreateFrame("Frame");
 startup:RegisterEvent("ADDON_LOADED");
@@ -397,15 +409,20 @@ startup:SetScript("OnEvent",function(self, event, addonName)
 			LoadAddOn("Blizzard_TimeManager");
 		end;
 
-		--check if Blizzards standard stopwatch was shown with the minimap-menu
-		TimeManagerStopwatchCheck:HookScript("OnClick", function()
-			MoreStopwatches.BlizzTimerShownFromMinimap = StopwatchFrame:IsVisible();
-		end);
+		if ( MoreStopwatches.BTM_Initialized ) then
+			blizzardTimeManagerHooks();
+		end;
 
-		StopwatchCloseButton:HookScript("OnClick", function()
-			MoreStopwatches.BlizzTimerShownFromMinimap = false;
-		end);
+		MoreStopwatches.Addon_Initialized = true
+	elseif ( addonName == "Blizzard_TimeManager" ) then
+		if ( MoreStopwatches.Addon_Initialized ) then
+			blizzardTimeManagerHooks();
+		end;
 
+		MoreStopwatches.BTM_Initialized = true;
+	end;
+
+	if ( MoreStopwatches.Addon_Initialized and MoreStopwatches.BTM_Initialized ) then
 		--everything set up - we are done here
 		self:UnregisterAllEvents();
 	end;
