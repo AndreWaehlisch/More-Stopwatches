@@ -1,3 +1,12 @@
+--only run on classic
+if ( WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC ) then
+	SLASH_MORESTOPWATCHES1 = "/sw";
+	SLASH_MORESTOPWATCHES2 = "/stopwatch";
+	SLASH_MORESTOPWATCHES3 = "/timer";
+	SlashCmdList["MORESTOPWATCHES"] = (function() print("MoreStopwatches: |cffFF0000You are running the retail version on classic.|r Please download the correct version on Curse.") end);
+	return;
+end;
+
 --global tabel
 MoreStopwatches = {};
 MoreStopwatches.timerList = {}; -- lookup table of all timers
@@ -342,17 +351,16 @@ startup:SetScript("OnEvent",function(self, event, addonName)
 					print(MoreStopwatchesString .. "'|cffFFFF00/msw close|r': Close all stopwatches created by this addon.");
 				else
 					print(MoreStopwatchesString .. "Available commands are: header, close.");
-				end
+				end;
 			else
 				print(MoreStopwatchesString .. "To create a new timer use '/sw MyNewTimer'. To show help use '/msw help'");
 			end;
-
 		end;
 
 		-- while the above slash command creates a new timer/stopwatch, we shall add a "config" slash command here
 		SLASH_MORESTOPWATCHESCONFIG1 = "/morestopwatches";
 		SLASH_MORESTOPWATCHESCONFIG2 = "/msw";
-		SlashCmdList["MORESTOPWATCHESCONFIG"] = MoreStopwatches.ConfigSlash
+		SlashCmdList["MORESTOPWATCHESCONFIG"] = MoreStopwatches.ConfigSlash;
 
 		if ( not (MoreStopwatchesSave.savedTimers and MoreStopwatchesSave.time) ) then
 			MoreStopwatchesSave.savedTimers = {};
@@ -363,7 +371,7 @@ startup:SetScript("OnEvent",function(self, event, addonName)
 			__index = function(tab, key)
 				rawset(tab, key, {});
 				return rawget(tab, key);
-			end
+			end;
 		});
 
 		--restore saved stopwatches
@@ -413,7 +421,7 @@ startup:SetScript("OnEvent",function(self, event, addonName)
 			blizzardTimeManagerHooks();
 		end;
 
-		MoreStopwatches.Addon_Initialized = true
+		MoreStopwatches.Addon_Initialized = true;
 	elseif ( addonName == "Blizzard_TimeManager" ) then
 		if ( MoreStopwatches.Addon_Initialized ) then
 			blizzardTimeManagerHooks();

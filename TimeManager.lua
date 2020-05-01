@@ -1,3 +1,8 @@
+--only run on classic
+if ( WOW_PROJECT_ID ~= WOW_PROJECT_CLASSIC ) then
+	return;
+end;
+
 --locals
 local inited = false;
 local disabledWarning = true;
