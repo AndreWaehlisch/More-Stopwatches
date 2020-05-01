@@ -1,3 +1,8 @@
+--only run on retail
+if ( WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE ) then
+	return;
+end;
+
 --locals
 local inited = false;
 local disabledWarning = true;
