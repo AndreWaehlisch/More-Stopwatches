@@ -96,9 +96,6 @@ function MoreStopwatches.Init()
 	end;
 
 	function MoreStopwatches_StopwatchTemplateFrame_OnLoad(self)
-		self:RegisterEvent("ADDON_LOADED");
-		self:RegisterEvent("PLAYER_LOGOUT");
-
 		-- user may have disabled dragging (with a right-click), only enable it if not. also disable the close button if dragging disabled.
 		if ( MoreStopwatchesSave.savedTimers[self:GetName()].isDisabled ) then
 			_G[self:GetName().."StopwatchTabFrameStopwatchCloseButton"]:Disable();
