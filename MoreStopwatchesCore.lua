@@ -1,9 +1,3 @@
---only run on retail
-if ( WOW_PROJECT_ID ~= WOW_PROJECT_MAINLINE ) then
-	hooksecurefunc(SlashCmdList, "STOPWATCH", function() print("MoreStopwatches: |cffFF0000You are running the classic version on retail.|r Please download the correct version on Curse.") end);
-	return;
-end;
-
 --global tabel
 MoreStopwatches = {};
 MoreStopwatches.timerList = {}; -- lookup table of all timers
@@ -22,6 +16,14 @@ local function blizzardTimeManagerHooks()
 	StopwatchCloseButton:HookScript("OnClick", function()
 		MoreStopwatches.BlizzTimerShownFromMinimap = false;
 	end);
+
+	-- classic WoW (version 11302) seems to not have SlashCmdList["STOPWATCH"], so create that. take notice, that some addons (seen in ElvUI) map, e.g., Stopwatch_Toggle to SlashCmdList.STOPWATCH, so it >may< already exist
+	if ( not SlashCmdList.STOPWATCH ) then
+		SlashCmdList.STOPWATCH = (function() end); -- insert a noop
+	end;
+
+	--hook the blizzard /timer (also /sw and /stopwatch) slash command, this is where we do our magic
+	hooksecurefunc(SlashCmdList, "STOPWATCH", MoreStopwatches.Slash);
 end;
 
 --do our stuff once saved vars are loaded
@@ -301,9 +303,6 @@ startup:SetScript("OnEvent",function(self, event, addonName)
 				debug("Header is permanently shown.");
 			end;
 		end;
-
-		--hook the blizzard /timer (also /sw and /stopwatch) slash command, this is where we do our magic
-		hooksecurefunc(SlashCmdList, "STOPWATCH", MoreStopwatches.Slash);
 
 		local MoreStopwatchesString = "MoreStopwatches: ";
 
