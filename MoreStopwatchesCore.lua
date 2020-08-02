@@ -1,5 +1,6 @@
 --global tabel
 MoreStopwatches = {};
+MoreStopwatches.FRAME_PREFIX = "MoreStopwatches_";
 MoreStopwatches.timerList = {}; -- lookup table of all timers
 MoreStopwatches.timerList_sorted = {}; -- ordered list of all timers
 MoreStopwatches.Addon_Initialized = false; -- ADDON_LOADED fired for our addon
@@ -31,9 +32,6 @@ local startup = CreateFrame("Frame");
 startup:RegisterEvent("ADDON_LOADED");
 startup:SetScript("OnEvent",function(self, event, addonName)
 	if ( addonName == "MoreStopwatches" ) then
-		--locals
-		local FRAME_PREFIX = "MoreStopwatches_";
-
 		--debug stuff
 		local function debug(...)
 			if ( MoreStopwatches.debugEnabled ) then
@@ -231,7 +229,7 @@ startup:SetScript("OnEvent",function(self, event, addonName)
 				debug("Timer already exists. Reusing.");
 			else
 				--...or create a new timer if not
-				timer = CreateFrame("Frame", FRAME_PREFIX .. timerName, UIParent, "MoreStopwatchesTemplate");
+				timer = CreateFrame("Frame", MoreStopwatches.FRAME_PREFIX .. timerName, UIParent, "MoreStopwatchesTemplate");
 				debug("New timer created.");
 			end;
 
@@ -385,7 +383,8 @@ startup:SetScript("OnEvent",function(self, event, addonName)
 
 					if ( restoreTime < 6000 ) then
 						--strip frame-prefix to get timer label
-						local label = gsub(frameName, FRAME_PREFIX, "");
+
+						local label = gsub(frameName, MoreStopwatches.FRAME_PREFIX, "");
 
 						--simulate slash command (and pause button if it was not playing on save)
 						MoreStopwatches.Slash(string.format("%f true %s", restoreTime, label), tab.playing and "PLAYING" or "PAUSED", tab.savedPosition);
