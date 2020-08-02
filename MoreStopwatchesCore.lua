@@ -19,10 +19,21 @@ local function blizzardTimeManagerHooks()
 
 	-- classic WoW (version 11302) seems to not have SlashCmdList["STOPWATCH"], so create that. take notice, that some addons (seen in ElvUI) map, e.g., Stopwatch_Toggle to SlashCmdList.STOPWATCH, so it >may< already exist
 	if ( not SlashCmdList.STOPWATCH ) then
-		SlashCmdList.STOPWATCH = (function() end); -- insert a noop
+		SlashCmdList["STOPWATCH"] = (function() end); -- insert a noop
 	end;
 
-	--hook the blizzard /timer (also /sw and /stopwatch) slash command, this is where we do our magic
+	-- weird workaround for Tukui overwriting SlashCmdList on PLAYER_LOGIN
+	local myFrame = CreateFrame("Frame");
+	myFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
+	myFrame:SetScript("OnEvent", function()
+		if ( SlashCmdList.STOPWATCH == Stopwatch_Toggle ) then
+			SlashCmdList["STOPWATCH"] = (function() end); -- insert a noop
+			hooksecurefunc(SlashCmdList, "STOPWATCH", MoreStopwatches.Slash);
+		end;
+		myFrame:UnregisterAllEvents();
+	end)
+
+	-- hook the blizzard /timer (also /sw and /stopwatch) slash command, this is where we do our magic
 	hooksecurefunc(SlashCmdList, "STOPWATCH", MoreStopwatches.Slash);
 end;
 

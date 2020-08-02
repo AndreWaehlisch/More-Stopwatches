@@ -12,6 +12,8 @@
 
 ## SavedVariablesPerCharacter: MoreStopwatchesSave
 
+## OptionalDeps: Tukui
+
 MoreStopwatchesCore.lua
 TimeManager.lua
 TimeManager.xml
