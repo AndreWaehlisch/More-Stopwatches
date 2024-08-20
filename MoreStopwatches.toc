@@ -14,6 +14,8 @@
 
 ## OptionalDeps: Tukui
 
+## IconTexture: 134377
+
 MoreStopwatchesCore.lua
 TimeManager.lua
 TimeManager.xml
