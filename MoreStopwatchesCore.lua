@@ -417,8 +417,8 @@ startup:SetScript("OnEvent",function(self, event, addonName)
 			end;
 		end;
 
-		if ( not IsAddOnLoaded("Blizzard_TimeManager") ) then
-			LoadAddOn("Blizzard_TimeManager");
+		if ( not C_AddOns.IsAddOnLoaded("Blizzard_TimeManager") ) then
+			C_AddOns.LoadAddOn("Blizzard_TimeManager");
 		end;
 
 		if ( MoreStopwatches.BTM_Initialized ) then

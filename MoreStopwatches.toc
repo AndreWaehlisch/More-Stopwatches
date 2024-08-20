@@ -1,4 +1,4 @@
-## Interface: 90207
+## Interface: 110002
 
 ## Title: More Stopwatches
 
@@ -13,6 +13,8 @@
 ## SavedVariablesPerCharacter: MoreStopwatchesSave
 
 ## OptionalDeps: Tukui
+
+## IconTexture: 134377
 
 MoreStopwatchesCore.lua
 TimeManager.lua
