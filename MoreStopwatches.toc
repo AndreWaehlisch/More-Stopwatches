@@ -1,4 +1,4 @@
-## Interface: 110002
+## Interface: 120000
 
 ## Title: More Stopwatches
 
@@ -15,6 +15,8 @@
 ## OptionalDeps: Tukui
 
 ## IconTexture: 134377
+
+## Category: User Interface
 
 MoreStopwatchesCore.lua
 TimeManager.lua
