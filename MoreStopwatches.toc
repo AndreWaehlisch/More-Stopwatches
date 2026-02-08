@@ -1,4 +1,4 @@
-## Interface: 40400
+## Interface: 50503
 
 ## Title: More Stopwatches
 
